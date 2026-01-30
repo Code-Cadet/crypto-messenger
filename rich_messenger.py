@@ -28,7 +28,7 @@ def main_menu():
         # Create title panel
         title = Panel.fit(
             "[bold cyan]🔐 CRYPTO MESSENGER[/bold cyan]\n"
-            "[dim]Educational Caesar Cipher Implementation[/dim]",
+            "[dim] Caesar Cipher Implementation[/dim]",
             border_style="cyan",
             padding=(1, 2)
         )
