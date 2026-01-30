@@ -141,65 +141,99 @@ def decrypt_workflow():
     console.print(header)
     console.print()
     
-    # Check if message file exists
-    if not os.path.exists("message.txt"):
-        console.print("[red]❌ No message.txt found![/red]")
-        console.print("[dim]Encrypt a message first to create the file.[/dim]")
-        Prompt.ask("\n[dim]Press Enter to continue[/dim]", default="")
-        return
+    # Ask user for source of ciphertext
+    console.print("[yellow]Decrypt from:[/yellow]")
+    console.print("  [cyan]1[/cyan] - message.txt (saved file)")
+    console.print("  [cyan]2[/cyan] - Enter ciphertext manually")
+    console.print()
     
-    # Read the message file
-    try:
-        with open("message.txt", "r") as f:
-            content = f.read().strip()
-        
-        if not content:
-            console.print("[red]❌ message.txt is empty![/red]")
+    choice = Prompt.ask(
+        "[yellow]Select source[/yellow]",
+        choices=["1", "2"],
+        default="1"
+    )
+    
+    console.print()
+    
+    # Get ciphertext based on choice
+    if choice == "1":
+        # Read from message.txt
+        if not os.path.exists("message.txt"):
+            console.print("[red]❌ No message.txt found![/red]")
+            console.print("[dim]Encrypt a message first or choose manual entry.[/dim]")
             Prompt.ask("\n[dim]Press Enter to continue[/dim]", default="")
             return
         
-        # Strip version tag
-        ciphertext = content[3:] if content.startswith("v1.") else content
+        try:
+            with open("message.txt", "r") as f:
+                content = f.read().strip()
+            
+            if not content:
+                console.print("[red]❌ message.txt is empty![/red]")
+                Prompt.ask("\n[dim]Press Enter to continue[/dim]", default="")
+                return
+            
+            # Strip version tag
+            ciphertext = content[3:] if content.startswith("v1.") else content
+            
+            # Display the ciphertext
+            cipher_panel = Panel(
+                f"[yellow]{content}[/yellow]",
+                title="[dim]From message.txt[/dim]",
+                border_style="yellow",
+                padding=(1, 2)
+            )
+            console.print(cipher_panel)
+            console.print()
+            
+        except IOError as e:
+            console.print(f"[red]❌ Error reading message.txt: {e}[/red]")
+            Prompt.ask("\n[dim]Press Enter to continue[/dim]", default="")
+            return
+    else:
+        # Manual entry
+        console.print("[yellow]Enter ciphertext to decrypt:[/yellow]")
+        console.print("[dim](paste the encrypted message you received)[/dim]")
+        user_input = Prompt.ask("[dim]›[/dim]")
         
-        # Display the ciphertext
-        cipher_panel = Panel(
-            f"[yellow]{content}[/yellow]",
-            title="[dim]Current Message[/dim]",
-            border_style="yellow",
-            padding=(1, 2)
-        )
-        console.print(cipher_panel)
+        if not user_input or not user_input.strip():
+            console.print("\n[red]❌ Ciphertext cannot be empty![/red]")
+            Prompt.ask("\n[dim]Press Enter to continue[/dim]", default="")
+            return
+        
+        # Strip version tag if present
+        ciphertext = user_input.strip()
+        if ciphertext.startswith("v1."):
+            ciphertext = ciphertext[3:]
+        
         console.print()
-        
-        # Get shift key
-        shift = IntPrompt.ask(
-            "[yellow]Enter shift key[/yellow] [dim](press Enter for ROT13 default)[/dim]",
-            default=caesar.DEFAULT_SHIFT
-        )
-        
-        # Decrypt the message
-        plaintext = caesar.decrypt(ciphertext, shift)
-        
-        # Display result
-        result_text = Text()
-        result_text.append("✅ Decrypted Successfully\n\n", style="green bold")
-        result_text.append("Ciphertext: ", style="bold")
-        result_text.append(f"{ciphertext}\n", style="yellow")
-        result_text.append("Plaintext:  ", style="bold")
-        result_text.append(f"{plaintext}\n", style="white")
-        result_text.append("Shift:      ", style="bold")
-        result_text.append(f"{shift}", style="cyan")
-        
-        result_panel = Panel(
-            result_text,
-            border_style="green",
-            padding=(1, 2)
-        )
-        console.print("\n")
-        console.print(result_panel)
-        
-    except IOError as e:
-        console.print(f"[red]❌ Error reading message.txt: {e}[/red]")
+    
+    # Get shift key
+    shift = IntPrompt.ask(
+        "[yellow]Enter shift key[/yellow] [dim](press Enter for ROT13 default)[/dim]",
+        default=caesar.DEFAULT_SHIFT
+    )
+    
+    # Decrypt the message
+    plaintext = caesar.decrypt(ciphertext, shift)
+    
+    # Display result
+    result_text = Text()
+    result_text.append("✅ Decrypted Successfully\n\n", style="green bold")
+    result_text.append("Ciphertext: ", style="bold")
+    result_text.append(f"{ciphertext}\n", style="yellow")
+    result_text.append("Plaintext:  ", style="bold")
+    result_text.append(f"{plaintext}\n", style="white")
+    result_text.append("Shift:      ", style="bold")
+    result_text.append(f"{shift}", style="cyan")
+    
+    result_panel = Panel(
+        result_text,
+        border_style="green",
+        padding=(1, 2)
+    )
+    console.print("\n")
+    console.print(result_panel)
     
     Prompt.ask("\n[dim]Press Enter to continue[/dim]", default="")
 
