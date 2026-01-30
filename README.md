@@ -24,16 +24,21 @@ The system demonstrates how encryption protects message confidentiality even whe
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/crypto-messenger.git
+git clone https://github.com/Code-Cadet/crypto-messenger.git
 cd crypto-messenger
 
 # Install testing dependencies (optional)
 pip install -r requirements.txt
+
+# Install rich library for modern UI (optional)
+pip install rich
 ```
 
 ## Usage
 
-### Encrypting and Sending Messages
+### Command-Line Interface (CLI)
+
+#### Encrypting and Sending Messages
 
 ```bash
 # Send message with custom shift
@@ -48,7 +53,7 @@ The sender encrypts the message and writes it to `message.txt` with a version ta
 v1.URYYB JBEYQ
 ```
 
-### Receiving and Decrypting Messages
+#### Receiving and Decrypting Messages
 
 ```bash
 # Receive message with specific shift
@@ -62,6 +67,33 @@ The receiver reads `message.txt`, strips the version tag, and outputs the decryp
 ```
 HELLO WORLD
 ```
+
+### Rich Terminal UI (Interactive)
+
+For a modern, colorful terminal experience with menus and panels:
+
+```bash
+# Install rich library first
+pip install rich
+
+# Launch interactive UI
+python rich_messenger.py
+```
+
+**Features:**
+- 🎨 Colorful panels and tables
+- 📋 Interactive menu system
+- 📤 Guided encryption workflow
+- 📥 Guided decryption workflow
+- 📄 Message file viewer
+- 🔄 ROT13 demonstration mode
+- ⌨️ Smart prompts with defaults
+
+**Rich UI Screenshots:**
+- Beautiful color-coded output
+- Clear section separation with borders
+- Step-by-step guided workflows
+- Visual feedback for all operations
 
 ## How It Works
 
@@ -167,7 +199,9 @@ For real-world security, use established cryptographic libraries like:
 
 ## Development Workflow
 
-### Typical Message Exchange
+### Command-Line Usage
+
+#### Typical Message Exchange
 
 ```bash
 # Step 1: Alice encrypts and sends
@@ -183,7 +217,7 @@ python receiver.py 7
 # MEET AT MIDNIGHT
 ```
 
-### Smart Defaults in Action
+#### Smart Defaults in Action
 
 ```bash
 # Both sender and receiver use DEFAULT_SHIFT = 13
@@ -191,6 +225,27 @@ python sender.py "SECRET MESSAGE"
 python receiver.py
 # Output: SECRET MESSAGE
 ```
+
+### Rich Terminal UI Usage
+
+Launch the interactive menu system for a guided experience:
+
+```bash
+python rich_messenger.py
+```
+
+**Menu Options:**
+1. **📤 Encrypt Message** - Enter message and shift interactively
+2. **📥 Decrypt Message** - Load from `message.txt` and decrypt
+3. **📄 View Message File** - Inspect current encrypted message
+4. **🔄 ROT13 Demo** - See self-inverse property in action
+5. **❌ Exit** - Close the application
+
+The Rich UI provides:
+- Visual feedback with colored panels
+- Input validation and helpful error messages
+- Default values (press Enter for ROT13)
+- Clear workflow guidance
 
 ## Why ROT13?
 

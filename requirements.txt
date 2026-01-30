@@ -1,2 +1,5 @@
 # Testing dependencies
 pytest>=7.0.0
+
+# Rich Terminal UI (optional)
+rich>=13.0.0
